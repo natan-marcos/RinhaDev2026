@@ -1,15 +1,21 @@
-app.get('/ready', (req, res) => {
-  res.status(200).json({
-    status: 'Rodando',
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-    pid: process.pid
-  });
+const express = require('express');
+const router = express.Router();
+
+router.get('/ready', (req, res) => {
+  res.status(200)
+    .json({"ready": true}
+    );}
+);
+
+const vectorSearch = require('./vectorSearch.js');
+
+router.post('/fraud-score', async (req, res) => {
+  try {
+    const result = await vectorSearch.vectorSearch();
+    res.status(200).json({ result });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
-app.post('/fraud-score', (req, res) => {
-  res.json({
-    received: req.body,
-    timestamp: new Date().toISOString()
-  });
-});
+module.exports = router;

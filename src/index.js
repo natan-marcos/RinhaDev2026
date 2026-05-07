@@ -1,14 +1,10 @@
 const express = require('express');
 const app = express();
 
-app.use(express.json());
+const statusRoutes = require('./routes.js');
 
-app.get('/status', (req, res) => {
-  res.json({
-    status: 'Running',
-    timestamp: new Date().toISOString()
-  });
-});
+app.use(express.json());
+app.use(statusRoutes);
 
 const PORT = 9999;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
