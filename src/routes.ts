@@ -12,7 +12,7 @@ router.post('/fraud-score', async (req: Request<{}, {}, FraudRequest>, res: Resp
   try {
     const payload = req.body;
     const result = await vectorSearch(payload);
-    res.status(200).json({ result });
+    res.status(200).json(result);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Erro desconhecido';
     res.status(500).json({ error: message });

@@ -1,9 +1,9 @@
 import normalization from '../resources/normalization.json';
-import mccRisk from '../resources/mcc-risk.json';
-import { FraudRequest } from './Models/Request';
+import mccRisk from '../resources/mcc_risk.json';
+import { FraudRequest, Merchant } from './Models/Request';
 
 function limitar(valor: number, max: number): number {
-    return Math.min(Math.max(valor, 0.0), 1.0);
+    return Math.min(Math.max(valor/max, 0.0), 1.0);
 }
 
 function hora(timestamp: string): number {
@@ -24,10 +24,10 @@ export function normalizar(payload: FraudRequest): number[] {
     const n = normalization;
     return[
         //0 - amount
-        limitar(transaction.amount / n.max_amount, 1.0),
+        limitar(transaction.amount, n.max_amount),
     
         //1 - installments
-        limitar(transaction.installments / n.max_installments, 1.0),
+        limitar(transaction.installments, n.max_installments),
 
         //2 - amount_vs_avg
         limitar((transaction.amount / customer.avg_amount) / n.amount_vs_avg_ratio, 1.0),
@@ -43,18 +43,26 @@ export function normalizar(payload: FraudRequest): number[] {
 
         //6 - km_from_last_tx
         last_transaction ? limitar(last_transaction.km_from_current, n.max_km) : -1.0,
+
         //7 - km_from_home
         limitar(terminal.km_from_home, n.max_km),
+
         //8 - tx_count_24h
-        limitar(customer.tx_count_24h / n.max_tx_count_24h, 1.0),
+        limitar(customer.tx_count_24h, n.max_tx_count_24h),
+
         //9 - is_online
         terminal.is_online ? 1.0 : 0.0,
+
         //10 - card_present
         terminal.card_present ? 1.0 : 0.0,
+
         //11 - unkown_merchant
+        customer.known_merchants.includes(merchant.id) ? 0.0 : 1.0,
 
         //12 - mcc_risk
-        mccRisk
+        (mccRisk as Record<string, number>)[merchant.mcc] ?? 0.5,
+        
         //13 - merchant_avg_amount
+        limitar(merchant.avg_amount, n.max_amount),
     ];
 }
