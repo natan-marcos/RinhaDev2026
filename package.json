@@ -3,6 +3,7 @@
     "express": "^5.2.1"
   },
   "scripts": {
-    "start": "npx nodemon index.js"
+    "start": "npx nodemon ./src/index.js",
+    "bot": "node ./src/bot.js"
   }
 }
