@@ -1,13 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const vectorSearch = require('./vectorSearch.js');
 
 router.get('/ready', (req, res) => {
   res.status(200)
     .json({"ready": true}
     );}
 );
-
-const vectorSearch = require('./vectorSearch.js');
 
 router.post('/fraud-score', async (req, res) => {
   try {
