@@ -39,22 +39,22 @@ export function normalizar(payload: FraudRequest): number[] {
         DiaDaSemana(transaction.requested_at),
 
         //5 - minutes_since_last_tx
+        last_transaction ? limitar(minutosDesdeUltima(last_transaction.timestamp, transaction.requested_at), n.max_minutes) : -1.0,
 
-        last_transaction ? limitar(minutosDesdeUltima(last_transaction.timestamp, transaction.requested_at) / n.max_minutes) : -1.0,
         //6 - km_from_last_tx
-
+        last_transaction ? limitar(last_transaction.km_from_current, n.max_km) : -1.0,
         //7 - km_from_home
-
+        limitar(terminal.km_from_home, n.max_km),
         //8 - tx_count_24h
-
+        limitar(customer.tx_count_24h / n.max_tx_count_24h, 1.0),
         //9 - is_online
-
+        terminal.is_online ? 1.0 : 0.0,
         //10 - card_present
-
+        terminal.card_present ? 1.0 : 0.0,
         //11 - unkown_merchant
 
         //12 - mcc_risk
-
+        mccRisk
         //13 - merchant_avg_amount
     ];
 }

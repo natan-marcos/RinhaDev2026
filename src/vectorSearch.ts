@@ -1,6 +1,6 @@
-import { FraudRequest } from './Models/Request';
-import { Normalization } from '../resources/normalization.json';
-
+import { FraudRequest, Normalization } from './Models/Request';
+import normalization from '../resources/normalization.json'; 
+import
 export async function vectorSearch(payload: FraudRequest): Promise<number> {
   try {
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -13,11 +13,13 @@ export async function vectorSearch(payload: FraudRequest): Promise<number> {
   }
 }
 
-function limitar(valor: number , campo: string): number {
 
-    const Eq = valor / Normalization[campo];
 
-    const clamped = Math.min(Math.max(Eq, 0.0), 1.0);
+function limitar(valor: number, campo: string): number {
+    const chave = TypetoKey[campo as keyof typeof TypetoKey];
 
-    return clamped;
+    if (!chave) { throw new Error(`Campo desconhecido: ${campo}`); }
+
+    const max = normalization[chave as keyof Normalization];
+  return Math.min(Math.max(eq, 0.0), 1.0);
 }
