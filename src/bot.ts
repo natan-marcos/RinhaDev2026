@@ -1,12 +1,11 @@
 import payloads from '../example-payloads.json';
-import { FraudRequest } from './Models/Request';
 
 const TARGET_URL = 'http://localhost:9999/fraud-score';
 const DELAY_MS = 500;
-const TOTAL_REQUESTS: number = 1; // 0 = infinito
+const TOTAL_REQUESTS: number = 1;
 
-function getRandomPayload(): FraudRequest {
-  const base = payloads[Math.floor(Math.random() * payloads.length)] as FraudRequest;
+function getRandomPayload(): any {
+  const base = payloads[Math.floor(Math.random() * payloads.length)] as any;
 
   return {
     ...base,
@@ -41,7 +40,8 @@ async function sendRequest(index: number): Promise<void> {
 }
 
 async function run(): Promise<void> {
-  console.log(`🤖 Bot iniciado → ${TARGET_URL}`);
+  console.log(` Bot iniciado → ${TARGET_URL}`);
+  console.log(`Payload ${TOTAL_REQUESTS} de ${payloads.length}`);
   console.log(`   Payloads disponíveis: ${payloads.length}`);
   console.log(`   Requests: ${TOTAL_REQUESTS === 0 ? '∞' : TOTAL_REQUESTS} | Delay: ${DELAY_MS}ms\n`);
 
@@ -53,7 +53,7 @@ async function run(): Promise<void> {
     i++;
   }
 
-  console.log('✅ Bot finalizado.');
+  console.log(' Bot finalizado.');
 }
 
 run();
