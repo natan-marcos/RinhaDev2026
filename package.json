@@ -7,7 +7,8 @@
   },
   "scripts": {
     "start": "npx nodemon ./src/index.ts",
-    "bot": "node ./src/bot.ts"
+    "bot": "node ./src/bot.ts",
+    "build": "tsc"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
